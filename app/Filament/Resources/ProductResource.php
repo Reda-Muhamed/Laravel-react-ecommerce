@@ -7,6 +7,7 @@ use App\Enums\RolesEnum;
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\Pages\EditProduct;
 use App\Filament\Resources\ProductResource\Pages\ProductImages;
+use App\Filament\Resources\ProductResource\Pages\ProductVariationTypes;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
@@ -145,6 +146,7 @@ class ProductResource extends Resource
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
             'images'=> Pages\ProductImages::route('/{record}/images'),
+            'variation-types'=> Pages\ProductVariationTypes::route('/{record}/variation-types'),
         ];
     }
     // this func related to the media like images
@@ -154,7 +156,8 @@ class ProductResource extends Resource
             $page->generateNavigationItems(
                 [
                     EditProduct::class,
-                    ProductImages::class
+                    ProductImages::class,
+                    ProductVariationTypes::class
                 ]
             );
     }
