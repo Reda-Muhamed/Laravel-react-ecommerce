@@ -1,17 +1,40 @@
+/* eslint-disable prettier/prettier */
 import { Config } from 'ziggy-js';
 
 export interface User {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at?: string;
+}
+export type Product = {
+  id: number;
+  name: string;
+  slug: string;
+  price: number;
+  description: string;
+  quantity: number;
+  image: string;
+  user: {
     id: number;
     name: string;
-    email: string;
-    email_verified_at?: string;
-}
+  };
+  department: {
+    id: number;
+    name: string;
+  };
+};
+export type PaginationProps<T> = {
+
+    data: Array<T>;
+ 
+};
 
 export type PageProps<
-    T extends Record<string, unknown> = Record<string, unknown>,
+  T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
-    auth: {
-        user: User;
-    };
-    ziggy: Config & { location: string };
+  auth: {
+    user: User;
+  };
+  ziggy: Config & { location: string };
 };

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('name');//black
 
         });
-        Schema::create('product_variations', function (Blueprint $table) {
+        Schema::create('product_    variations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->index()->constrained('products')->cascadeOnDelete();
             $table->json('variation_type_option_ids');
