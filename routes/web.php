@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Department;
@@ -10,6 +11,12 @@ use Inertia\Inertia;
 Route::get('/', [ProductController::class,'home'])->name('dashboard');
 Route::get('/product/{product:slug}', [ProductController::class,'show'])->name('product.show');
 
+Route::controller(CartController::class)->group(function(){
+    Route::get('/cart', 'index')->name('cart.index');
+    Route::post('/cart/store/{product}', 'store')->name('cart.store');
+    Route::put('/cart/{product}','update')->name('cart.update');
+    Route::delete('/cart/{product}','destroy')->name('cart.destroy');
+});
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');

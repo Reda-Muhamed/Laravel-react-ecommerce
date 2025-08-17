@@ -85,16 +85,25 @@ class ProductVariations extends EditRecord
                 ->toArray();
 
             // find matching entry in existing data
+            // $match = array_filter($existingData, function ($existingOptions) use ($optionsIds) {
+            //     return $existingOptions['variation_type_option_ids'] === $optionsIds;
+            // });
             $match = array_filter($existingData, function ($existingOptions) use ($optionsIds) {
-                return $existingOptions['variation_type_option_ids'] === $optionsIds;
+                $existingIds = $existingOptions['variation_type_option_ids'];
+
+                // Ensure both arrays are sorted before comparison
+                sort($optionsIds);
+                sort($existingIds);
+
+                return $existingIds === $optionsIds;
             });
+
 
             if (!empty($match)) {
                 $existingEntry = reset($match);
                 $product['quantity'] = $existingEntry['quantity'];
                 $product['price'] = $existingEntry['price'];
                 $product['id'] = $existingEntry['id'];
-
             } else {
                 $product['quantity'] = $defaultQuantity;
                 $product['price'] = $defaultPrice;
@@ -121,46 +130,46 @@ class ProductVariations extends EditRecord
         return $mergedResult;
     }
 
-   private function generateCartesianProduct($variationTypes, $defaultQuantity, $defaultPrice): array
-{
-    if ($variationTypes instanceof \Illuminate\Support\Collection) {
-        $variationTypes = $variationTypes->all();
-    }
+    private function generateCartesianProduct($variationTypes, $defaultQuantity, $defaultPrice): array
+    {
+        if ($variationTypes instanceof \Illuminate\Support\Collection) {
+            $variationTypes = $variationTypes->all();
+        }
 
-    $result = [[]];
+        $result = [[]];
 
-    foreach ($variationTypes as $variationType) {
-        $temp = [];
-        $options = $variationType->options ?? [];
+        foreach ($variationTypes as $variationType) {
+            $temp = [];
+            $options = $variationType->options ?? [];
 
-        foreach ($options as $option) {
-            $optionId = is_array($option) ? $option['id'] : $option->id;
-            $optionName = is_array($option) ? $option['name'] : $option->name;
+            foreach ($options as $option) {
+                $optionId = is_array($option) ? $option['id'] : $option->id;
+                $optionName = is_array($option) ? $option['name'] : $option->name;
 
-            foreach ($result as $combination) {
-                $newCombination = $combination + [
-                    'variation_type_' . $variationType->id => [
-                        'id' => (string) $optionId, // ✅ make sure ID is here
-                        'name' => $optionName,
-                        'label' => $variationType->name,
-                    ],
-                ];
-                $temp[] = $newCombination;
+                foreach ($result as $combination) {
+                    $newCombination = $combination + [
+                        'variation_type_' . $variationType->id => [
+                            'id' => (string) $optionId, // ✅ make sure ID is here
+                            'name' => $optionName,
+                            'label' => $variationType->name,
+                        ],
+                    ];
+                    $temp[] = $newCombination;
+                }
+            }
+
+            $result = $temp;
+        }
+
+        foreach ($result as &$combination) {
+            if (count($combination) === count($variationTypes)) {
+                $combination['quantity'] = $defaultQuantity;
+                $combination['price'] = $defaultPrice;
             }
         }
 
-        $result = $temp;
+        return $result;
     }
-
-    foreach ($result as &$combination) {
-        if (count($combination) === count($variationTypes)) {
-            $combination['quantity'] = $defaultQuantity;
-            $combination['price'] = $defaultPrice;
-        }
-    }
-
-    return $result;
-}
     protected function mutateFormDataBeforeSave(array $data): array
     {
 
@@ -177,7 +186,7 @@ class ProductVariations extends EditRecord
             }
 
             $formattedData[] = [
-                'id'=> $option['id'],
+                'id' => isset($option['id']) && $option['id'] ? (int) $option['id'] : null,
                 'variation_type_option_ids' => $variationTypeOptionIds,
                 'price' => (float) ($option['price'] ?? 0),
                 'quantity' => $option['quantity'] ?? 0,
@@ -202,18 +211,24 @@ class ProductVariations extends EditRecord
         //  dd($data['variations']);
         unset($data['variations']);
         $variations = collect($variations)->map(function ($variation) {
-            return ['id'=> $variation['id'],
-            'variation_type_option_ids' => json_encode($variation['variation_type_option_ids']),
-            'price' => $variation['price'],
-            'quantity'=> $variation['quantity'] ??0,
+            return [
+                'id' => $variation['id'],
+                'variation_type_option_ids' => json_encode($variation['variation_type_option_ids']),
+                'price' => $variation['price'],
+                'quantity' => $variation['quantity'] ?? 0,
 
-        ];
-
+            ];
         })->toArray();
-        // $record->update($data);
-        $record->variations()->delete();
-        $record->variations()->upsert($variations,['id'],['quantity','variation_type_option_ids','price']);
+        $existingIds = $record->variations()->pluck('id')->toArray();
+        $newIds = array_filter(array_column($variations, 'id'));
 
-        return$record;
+        $idsToDelete = array_diff($existingIds, $newIds);
+        if (!empty($idsToDelete)) {
+            $record->variations()->whereIn('id', $idsToDelete)->delete();
+        }
+
+        $record->variations()->upsert($variations, ['id'], ['quantity', 'variation_type_option_ids', 'price']);
+
+        return $record;
     }
 }

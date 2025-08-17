@@ -2,11 +2,13 @@
 import ProductItem from '@/Components/App/ProductItem';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps, PaginationProps, Product } from '@/types';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 
 export default function Home({ products }: PageProps<{
   products: PaginationProps<Product>
 }>) {
+  // console.log(products)
+
   return (
     <AuthenticatedLayout>
       <Head title="Home" />
@@ -25,8 +27,9 @@ export default function Home({ products }: PageProps<{
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg
       :grid-cols-3 xl:grid-cols-4 p-8">
         {products?.data?.map((product) => (
-
           <ProductItem  key={product.id} product={product} />
+
+
 
         ))}
       </div>

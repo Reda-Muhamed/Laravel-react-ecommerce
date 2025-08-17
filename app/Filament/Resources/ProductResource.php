@@ -39,7 +39,7 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')->live(onBlur: true)->required()->afterStateUpdated(
+                TextInput::make('name')->live(onBlur: true)->required()->afterStateUpdated(
                     function (string $operation, $state, callable $set) {
                         $set('slug', Str::slug($state));
                     }
