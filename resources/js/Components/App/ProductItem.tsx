@@ -1,10 +1,27 @@
 /* eslint-disable prettier/prettier */
 import { Product } from '@/types';
-import { Link } from '@inertiajs/react';
+import { Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import CurrencyFormatter from '../Core/CurrencyFormatter';
 
 export default function ProductItem({ product }: { product: Product }) {
+  const form = useForm<{
+    option_ids: Record<string, number>;
+    quantity: number;
+
+  }>({
+    option_ids: {},
+    quantity: 1,
+  })
+  const addToCart = () => {
+    form.post(route('cart.store', product.id), {
+      preserveScroll: true,
+      preserveState: true,
+      onError: (err) => {
+        console.log(err);
+      }
+    })
+  }
   return (
     <motion.div
       className="bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl border border-gray-700"
@@ -42,6 +59,7 @@ export default function ProductItem({ product }: { product: Product }) {
 
         <div className="flex items-center justify-between mt-4">
           <motion.button
+            onClick={addToCart}
             className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-500 transition-colors"
             whileTap={{ scale: 0.95 }}
           >

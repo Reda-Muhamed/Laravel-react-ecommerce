@@ -61,12 +61,33 @@ export type Image={
   small:string;
   large:string;
 };
+export type CartItem = {
+  id: number;
+  product_id: number;
+  title:string;
+  slug:string;
+  image:string;
+  price: number;
+  quantity: number;
+  option_ids:Record<string,number>;
+  options:VariationTypeOption[]
+}
+export type GroupedCartItems={
+  user:User;
+  items:CartItem[];
+  totalPrice:number;
+  totalQuantity:number;
 
+}
 export type PageProps<
   T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
+  csrf_token?:string;
   auth: {
     user: User;
   };
   ziggy: Config & { location: string };
+  totalQuantity:number;
+  totalPrice:number;
+  miniCartItems:CartItem[];
 };

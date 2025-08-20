@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Services\CartServices;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class CartController extends Controller
 {
@@ -13,18 +14,11 @@ class CartController extends Controller
      */
     public function index(CartServices $cartService)
     {
-        dd($cartService);
+        // dd($cartService->getCartItems());
+        return Inertia::render("Cart/Index", [
+            "cartItems" => $cartService->getCartItemsGrouped(),
+        ]);
     }
-
-
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request, Product $product, CartServices $cartService)
     {
         $request->mergeIfMissing([
@@ -35,12 +29,9 @@ class CartController extends Controller
             'quantity' => ['required', 'integer', 'min:1'],
 
         ]);
-        $cartService->addItemToCart($product, $data['quantity'], $data['option_ids']);
-        return back()->with('success','Product added to cart successfully!');
+        $cartService->addItemToCart($product, $data['quantity'], $data['option_ids']?:[]);
+        return back()->with('success', 'Product added to cart successfully!');
     }
-
-
-
 
 
     /**
@@ -51,9 +42,11 @@ class CartController extends Controller
         $request->validate([
             'quantity' => ['integer', 'min:1'],
         ]);
-        $optionsIds = $request->input('option_ids');
+        $optionsIds = $request->input('option_ids')?:[];
         $quantity = $request->input('quantity');
-        $cartService->updateItemQuantity($product->id,$quantity , $optionsIds);
+        // dd($optionsIds , $quantity);
+        $cartService->updateItemQuantity($product->id, $quantity, $optionsIds);
+        return back()->with('success', 'Quantity updated');
     }
 
     /**
@@ -62,7 +55,14 @@ class CartController extends Controller
     public function destroy(Request $request, Product $product, CartServices $cartService)
     {
         $optionIds = $request->input('option_ids');
-        $cartService->removeItemFromCart($product->id,$optionIds);
-        return back()->with('success','Product was removed from cart');
+        $cartService->removeItemFromCart($product->id, $optionIds);
+        return back()->with('success', 'Product was removed from cart');
     }
+
+
+
+    public function checkout(){
+
+    }
+
 }

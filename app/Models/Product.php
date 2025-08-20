@@ -57,20 +57,39 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(VariationType::class);
     }
-    public function user():BelongsTo  {
-        return $this->belongsTo(User::class,'created_by');
-
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
+
     public function variations(): HasMany
     {
         return $this->hasMany(ProductVariation::class);
     }
-    public function scopeForVendor(Builder $query){
-        return $query->where('created_by',Auth::user()->id);
 
+    public function scopeForVendor(Builder $query)
+    {
+        return $query->where('created_by', Auth::user()->id);
     }
-    public function scopeForPublished(Builder $query){
-        return $query->where('status',ProductStatusEnum::Published);
-
+    public function scopeForPublished(Builder $query)
+    {
+        return $query->where('status', ProductStatusEnum::Published);
+    }
+    public function scopeForWebsite(Builder $query)
+    {
+        return $query->forPublished();
+    }
+    public function getPriceForOptions($optionIds = [])
+    {
+        $optionIds = array_values($optionIds); // the id for the option for each type
+        ksort($optionIds);
+        foreach ($this->variations as $variation) {
+            $a = $variation->variation_type_option_ids;
+            ksort($a);
+            if ($optionIds == $a) {
+                return $variation->price??$this->price;
+            }
+        }
+        return $this->price;
     }
 }

@@ -7,9 +7,9 @@ import { Product, VariationTypeOption } from "@/types";
 import { Head, router, useForm, usePage } from "@inertiajs/react";
 import React, { useEffect, useMemo, useState } from "react";
 
-export default function Show({ product, variationOptions }: { product: Product, variationOptions: number[] }) {
-  console.log(product)
-  // console.log(variationOptions);
+export default function Show({ product, variationsOptions }: { product: Product, variationsOptions: number[] }) {
+  // console.log(product)
+  // console.log("variationOptions",variationsOptions);
   /*
   1. useForm:
      - Manages the main form data that will be submitted to the server.
@@ -30,7 +30,28 @@ export default function Show({ product, variationOptions }: { product: Product, 
      Keeps track of the user's currently selected variation options locally in the UI.
    */
   const [selectedOptions, setSelectedOptions] = useState<Record<number, VariationTypeOption>>({});
-  const [userHasInteracted, setUserHasInteracted] = useState(false);
+  useEffect(() => {
+    if (!product?.variationTypes || product.variationTypes.length === 0) return;
+
+    const newSelectedOptions: Record<number, VariationTypeOption> = {};
+
+    for (const type of product.variationTypes) {
+      if (!type?.options || type.options.length === 0) continue;
+
+      const selectedOptionId = variationsOptions?.[type.id];
+      const selectedOption = type.options.find(op => op.id === +selectedOptionId);
+
+      // Only pick first option if nothing is provided
+      if (selectedOption) {
+        newSelectedOptions[type.id] = selectedOption;
+      } else {
+        newSelectedOptions[type.id] = type.options[0];
+      }
+    }
+
+    setSelectedOptions(newSelectedOptions);
+    // console.log('selectedOptions',selectedOptions)
+  }, [product, variationsOptions]);
 
   const images = useMemo(() => {
     for (const typeId in selectedOptions) {
@@ -52,30 +73,30 @@ export default function Show({ product, variationOptions }: { product: Product, 
     return a.every((val, index) => val === b[index]);
   }
   const computedProduct = useMemo(() => {
-  const selectedOptionsIds = Object.values(selectedOptions)
-    .map(option => option.id)
-    .slice()
-    .sort((a, b) => a - b); // ensure numeric sort
+    const selectedOptionsIds = Object.values(selectedOptions)
+      .map(option => option.id)
+      .slice()
+      .sort((a, b) => a - b); // ensure numeric sort
     // console.log("selected option ids: ",selectedOptions)
     // console.log("product variations: ",product.variations)
 
-  for (const variation of product.variations) {
-    const optionIds = variation.variation_type_option_ids.slice().sort((a, b) => a - b).map(e=>+e);
-    // console.log("option ids: ",optionIds)
+    for (const variation of product.variations) {
+      const optionIds = variation.variation_type_option_ids.slice().sort((a, b) => a - b).map(e => +e);
+      // console.log("option ids: ",optionIds)
 
-    if (arraysAreEqual(selectedOptionsIds, optionIds)) {
-      return {
-        price: variation.price,
-        quantity: variation.quantity === null ? Number.MAX_VALUE : variation.quantity,
-      };
+      if (arraysAreEqual(selectedOptionsIds, optionIds)) {
+        return {
+          price: variation.price,
+          quantity: variation.quantity === null ? Number.MAX_VALUE : variation.quantity,
+        };
+      }
     }
-  }
 
-  return {
-    price: product.price,
-    quantity: product.quantity === null ? Number.MAX_VALUE : product.quantity,
-  };
-}, [product, selectedOptions]);
+    return {
+      price: product.price,
+      quantity: product.quantity === null ? Number.MAX_VALUE : product.quantity,
+    };
+  }, [product, selectedOptions]);
 
   const chooseOption = (typeId: number, option: VariationTypeOption, updateRouter:
     boolean) => {
@@ -85,7 +106,6 @@ export default function Show({ product, variationOptions }: { product: Product, 
         [typeId]: option
       };
       if (updateRouter) {
-        setUserHasInteracted(true)
         router.get(url, {
           options: getOptionIdMap(newOptions)
         }, {
@@ -96,19 +116,19 @@ export default function Show({ product, variationOptions }: { product: Product, 
       return newOptions;
     })
   }
-  useEffect(() => {
-    if (userHasInteracted) return;
-    if (!product?.variationTypes || product.variationTypes.length === 0) return;
+  // useEffect(() => {
+  //   if (userHasInteracted) return;
+  //   if (!product?.variationTypes || product.variationTypes.length === 0) return;
 
-    for (const type of product.variationTypes) {
-      if (!type?.options || type.options.length === 0) continue;
+  //   for (const type of product.variationTypes) {
+  //     if (!type?.options || type.options.length === 0) continue;
 
-      const selectedOptionId: number = variationOptions?.[type.id] ?? 0;
-      const selectedOption = type.options.find(op => op.id === selectedOptionId) || type.options[0];
+  //     const selectedOptionId: number = variationOptions?.[type.id] ?? 0;
+  //     const selectedOption = type.options.find(op => op.id === selectedOptionId) || type.options[0];
 
-      chooseOption(type.id, selectedOption, false);
-    }
-  }, [product, variationOptions, userHasInteracted]);
+  //     chooseOption(type.id, selectedOption, false);
+  //   }
+  // }, [product, variationOptions, userHasInteracted]);
 
   useEffect(() => {
     const idsMap = Object.fromEntries(
@@ -130,7 +150,7 @@ export default function Show({ product, variationOptions }: { product: Product, 
     )
 
   };
-  
+
   const addToCart = () => {
     form.post(route('cart.store', product.id), {
       preserveScroll: true,
@@ -246,3 +266,4 @@ export default function Show({ product, variationOptions }: { product: Product, 
 
   )
 }
+

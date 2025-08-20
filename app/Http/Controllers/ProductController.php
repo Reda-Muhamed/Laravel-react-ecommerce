@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     public function home()
     {
-        $products = Product::query()->forPublished()->paginate(12);
+        $products = Product::query()->forWebsite()->paginate(12);
         // dd(["products" => ProductListResource::collection($products)]);
         return Inertia::render("Home", ["products" => ProductListResource::collection($products)]);
     }
@@ -27,7 +27,8 @@ class ProductController extends Controller
             'media'
         ]);
         // dd(new ProductResource($product));
-    
+        // for this "variationsOptions" see the helper files in js and u will get it
+
         return Inertia::render('Product/Show', [
             'product' => new ProductResource($product),
             'variationsOptions' => request('options', []),

@@ -8,7 +8,6 @@ export default function Home({ products }: PageProps<{
   products: PaginationProps<Product>
 }>) {
   // console.log(products)
-
   return (
     <AuthenticatedLayout>
       <Head title="Home" />
