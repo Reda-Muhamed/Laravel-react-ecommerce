@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatusEnum;
+use App\Mail\CheckoutCompleted;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -11,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
@@ -38,7 +40,8 @@ class CartController extends Controller
 
         ]);
         $cartService->addItemToCart($product, $data['quantity'], $data['option_ids'] ?: []);
-        return back()->with('success', 'Product added to cart successfully!');
+       
+            return back()->with('success', 'Product added to cart successfully!');
     }
 
 
@@ -133,7 +136,7 @@ class CartController extends Controller
                 'success_url' => route('stripe.success', []) . "?session_id={CHECKOUT_SESSION_ID}",
                 'cancel_url' => route('stripe.failure', [])
             ]);
-                // dd($lineItems);
+            // dd($lineItems);
 
             foreach ($orders as $order) {
                 $order->stripe_session_id = $session->id;

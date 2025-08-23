@@ -16,6 +16,18 @@ export default {
       },
     },
   },
+  daisyui: {
+    themes: [
+      'light', // default
+      'dark', // dark mode
+      {
+        mytheme: {
+          // custom theme example
+          primary: '#6936f5',
+        },
+      },
+    ],
+  },
 
   plugins: [require('daisyui')],
 };

@@ -84,7 +84,7 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 SpatieMediaLibraryImageColumn::make('images')->collection('images')->limit(1)->conversion('thumb')->label('image'),
-                Tables\Columns\TextColumn::make('title')
+                Tables\Columns\TextColumn::make('name')
                     ->words(10)
                     ->searchable()
                     ->sortable(),
