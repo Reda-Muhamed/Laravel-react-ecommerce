@@ -159,6 +159,7 @@ export default function Show({ product, variationsOptions }: { product: Product,
         console.log(err);
       }
     })
+    
   }
   const renderAddToCartButton = () => {
     return (

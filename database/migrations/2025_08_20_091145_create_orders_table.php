@@ -32,6 +32,7 @@ return new class extends Migration
             $table->decimal('price',20,4);
             $table->integer('quantity');
             $table->json('variation_type_option_ids')->nullable();
+            $table->timestamps();
 
         });
     }

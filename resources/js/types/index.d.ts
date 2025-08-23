@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+import { OrderItem } from './index.d';
+
 import { Config } from 'ziggy-js';
 
 export interface User {
@@ -15,9 +17,9 @@ export type Product = {
   description: string;
   quantity: number;
   image: string;
-  images:Image[];
+  images: Image[];
   description: string;
-  short_description:string;
+  short_description: string;
   user: {
     id: number;
     name: string;
@@ -26,68 +28,101 @@ export type Product = {
     id: number;
     name: string;
   };
-  variationTypes: VariationType[],
+  variationTypes: VariationType[];
   variations: Array<{
     id: number;
-    variation_type_option_ids:number[];
-    quantity:number;
-    price:number;
-
-  }>
+    variation_type_option_ids: number[];
+    quantity: number;
+    price: number;
+  }>;
 };
 export type VariationTypeOption = {
   id: number;
   name: string;
-  images:Image[];
-  type:VariationType;
+  images: Image[];
+  type: VariationType;
 };
 
 export type VariationType = {
   id: number;
   name: string;
-  type:'Select'|'Radio'|'Image';
+  type: 'Select' | 'Radio' | 'Image';
   options: VariationTypeOption[];
 };
 
 export type PaginationProps<T> = {
-
-    data: Array<T>;
-
+  data: Array<T>;
 };
 
-export type Image={
-  id:number;
-  thumb:string;
-  small:string;
-  large:string;
+export type Image = {
+  id: number;
+  thumb: string;
+  small: string;
+  large: string;
 };
 export type CartItem = {
   id: number;
   product_id: number;
-  title:string;
-  slug:string;
-  image:string;
+  title: string;
+  slug: string;
+  image: string;
   price: number;
   quantity: number;
-  option_ids:Record<string,number>;
-  options:VariationTypeOption[]
-}
-export type GroupedCartItems={
-  user:User;
-  items:CartItem[];
-  totalPrice:number;
-  totalQuantity:number;
+  option_ids: Record<string, number>;
+  options: VariationTypeOption[];
+};
+export type GroupedCartItems = {
+  user: User;
+  items: CartItem[];
+  totalPrice: number;
+  totalQuantity: number;
+};
+export type OrderItem = {
+  id: number;
+  quantity: number;
+  price: number;
+  variation_type_option_ids: number[];
+  quantity: number;
+  product: {
+    id: number;
+    title: string;
+    slug: string;
+    description: string;
+    image: string;
+  };
+};
+export type Order = {
+  data: {
+    id: number;
+    total_price: number;
+    status: string;
+    created_at: string;
+    vendorUser: {
+      id: string;
+      name: string;
+      email: string;
+      store_name: string;
+      store_address: string;
+    };
+    orderItems: OrderItem[];
+  };
+};
 
-}
 export type PageProps<
   T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
-  csrf_token?:string;
+  csrf_token?: string;
+  error?: string;
+  success: {
+    message:string;
+    time:number;
+
+  };
   auth: {
     user: User;
   };
   ziggy: Config & { location: string };
-  totalQuantity:number;
-  totalPrice:number;
-  miniCartItems:CartItem[];
+  totalQuantity: number;
+  totalPrice: number;
+  miniCartItems: CartItem[];
 };

@@ -49,7 +49,11 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
 
             ],
-            'seccess'=> session('success'),
+            'success'=> [
+                'message'=>session('success'),
+                'time'=>microtime(true) - LARAVEL_START,
+            ],
+            'error'=> session('error'),
             'miniCartItems'=>$cartItems,
             'totalQuantity'=> $toatalQuantity,
             'totalPrice'=> $totalPrice,
