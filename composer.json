@@ -10,12 +10,13 @@
         "filament/filament": "^3.3",
         "filament/spatie-laravel-media-library-plugin": "3.3",
         "inertiajs/inertia-laravel": "^2.0",
+        "laravel/cashier": "15.7",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "mailersend/laravel-driver": "^2.11",
         "spatie/laravel-permission": "^6.21",
-        "stripe/stripe-php": "^17.5",
+        "stripe/stripe-php": "^16.6",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {

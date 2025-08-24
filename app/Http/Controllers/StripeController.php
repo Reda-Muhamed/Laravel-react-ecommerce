@@ -30,10 +30,8 @@ class StripeController extends Controller
             if ($order->user_id !== $user->id) {
                 abort(403);
             }
-
         }
         return Inertia::render('Stripe/Success', ['orders' => OrderViewResource::collection($orders)->collection->toArray()]);
-
     }
     public function failure() {}
     function webhook(Request $request)
@@ -89,8 +87,7 @@ class StripeController extends Controller
                     $order->website_commission = ($order->total_price - $order->online_payment_commission) / 100 * $platformFeePercentage;
                     $order->vendor_subtotal = $order->total_price - $order->online_payment_commission - $order->website_commission;
                     $order->save();
-                     Mail::to($order->vendorUser)->send(new NewOrderMail($order));
-
+                    Mail::to($order->vendorUser)->send(new NewOrderMail($order));
                 }
                 Mail::to($orders[0]->user)->send(new CheckoutCompleted($orders));
                 break;
@@ -130,5 +127,19 @@ class StripeController extends Controller
                 echo 'Recieved unknown event type ' . $event->type;
         }
         return response('', 200);
+    }
+    public function connect()
+    {
+        $user = auth()->user();
+
+        if (!$user->stripe_id) {
+            $user->createStripeAccount();
+        }
+
+        if (!$user->isStripeAccountActive()) {
+            return redirect($user->getStripeAccountLink());
+        }
+
+        return back()->with('success', 'Your account is already connected');
     }
 }
