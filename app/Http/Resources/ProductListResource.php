@@ -18,10 +18,10 @@ class ProductListResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'price' => $this->price,
+            'price' => $this->getPriceForFirstOptions(),
             'description' => $this->description,
             'quantity' => $this->quantity,
-            'image' => $this->getFirstMediaUrl('images') ?? null, // using Spatie Media Library
+            'image' => $this->getFirstImageUrl(), // using Spatie Media Library
             'user' => [
                 'id' => $this->user->id ?? null,
                 'name' => $this->user->name ?? null,

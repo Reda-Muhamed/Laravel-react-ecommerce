@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\VendorStatusEnum;
-use Filament\Forms\Components\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,10 +14,14 @@ class Vendor extends Model
     // protected $keyType = 'int';
 
 
-    function scopeEligibleForPayout(Builder $query) : Builder {
-
-        return $query->where('status',VendorStatusEnum::Approved);
+ public function scopeEligibleForPayout(Builder $query): Builder
+    {
+        return $query->where('status', VendorStatusEnum::Approved->value)
+            ->whereHas('user', function ($q) {
+                $q->whereNotNull('stripe_id');
+            });
     }
+
     /**
      * Get the user that owns the Vendor
      *

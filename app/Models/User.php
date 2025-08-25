@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Cashier\Billable;
 use Spatie\Permission\Traits\HasRoles;
+use Stripe\Stripe;
 use Stripe\StripeClient;
 
 /**
@@ -70,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function createStripeAccount()
     {
-        $stripe = new StripeClient(config('app.stripe_secret_key'));
+        $stripe = new StripeClient(config('app.stripe_secret'));
 
         $account = $stripe->accounts->create([
             'type' => 'express',
@@ -87,7 +88,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getStripeAccountLink()
     {
-        $stripe = new StripeClient(config('app.stripe_secret_key'));
+        $stripe = new StripeClient(config('app.stripe_secret'));
 
         $link = $stripe->accountLinks->create([
 
@@ -106,8 +107,18 @@ class User extends Authenticatable implements MustVerifyEmail
             return false;
         }
 
-        $stripe = new StripeClient(config('app.stripe_secret_key'));
+        $stripe = new StripeClient(config('app.stripe_secret'));
         $account = $stripe->accounts->retrieve($this->stripe_id, []);
         return $account->details_submitted && $account->charges_enabled;
+    }
+    // In User model
+    public function transfer(int $amount, string $currency = 'USD')
+    {
+         Stripe::setApiKey(config('app.stripe_secret'));
+        return \Stripe\Transfer::create([
+            'amount' => $amount,
+            'currency' => $currency,
+            'destination' => $this->stripe_id, // vendor's connected Stripe account
+        ]);
     }
 }

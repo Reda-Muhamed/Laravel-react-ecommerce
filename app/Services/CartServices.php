@@ -23,12 +23,12 @@ class CartServices
 
     public  function addItemToCart(Product $product, int $quantity = 1, $optionIds = null)
     {
-        if ($optionIds === null) {
+        if (!$optionIds) {
             // if no options are selected, we will select the first option for all type and just add the product to the cart
-            $optionIds = $product->variationTypes->mapWithKeys(fn(VariationType $type) => [$type->id => $type->options[0]?->id])->toArray();
+            $optionIds = $product->getFirstOptionsMap();
         }
         $price = $product->getPriceForOptions($optionIds);
-        // dd($price);
+        // dd($optionIds ,$price);
         if (Auth::check()) {
             $this->saveItemToDatabase($product->id, $quantity, $price, $optionIds);
         } else {

@@ -41,8 +41,8 @@ class StripeController extends Controller
         Log::info("=====================================================");
         Log::info("=====================================================");
 
-        $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET_KEY'));
-        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET_KEY');
+        $stripe = new \Stripe\StripeClient(config('stripe_secret'));
+        $endpoint_secret = config('stripe_webhook_secret');
 
         $payload = $request->getContent();
         $sig_header = $request->headers->get("Stripe-Signature");

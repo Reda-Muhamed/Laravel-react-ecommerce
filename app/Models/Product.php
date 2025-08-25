@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -92,7 +93,7 @@ class Product extends Model implements HasMedia
         }
         return $this->price;
     }
-    public function getImageForOptions( $optionIds = null)
+    public function getImageForOptions($optionIds = null)
     {
         if ($optionIds) {
             // dd($optionIds);
@@ -108,5 +109,45 @@ class Product extends Model implements HasMedia
             }
         }
         return $this->getFirstMediaUrl('images', 'small');
+    }
+    public function options(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            VariationTypeOption::class,
+            VariationType::class,
+            'product_id', // Foreign key on VariationType table...
+            'variation_type_id', // Foreign key on VariationTypeOption table...
+            'id', // Local key on Product table...
+            'id' // Local key on VariationType table...
+        );
+    }
+    public function getFirstImageUrl($collectionName  = 'images', $conversion = 'small'): string
+    {
+        if ($this->options()->count() > 0) {
+            foreach ($this->options as $option) {
+                $image = $option->getFirstMediaUrl($collectionName, $conversion);
+                if ($image) {
+                    return $image;
+                }
+            }
+        }
+        return $this->getFirstMediaUrl($collectionName, $conversion);
+    }
+    public function getPriceForFirstOptions(): float
+    {
+        $firstOption = $this->getFirstOptionsMap();
+
+        if ($firstOption) {
+            return $this->getPriceForOptions($firstOption);
+        }
+        return $this->price;
+    }
+    public function getFirstOptionsMap(): array{
+        //  dd($this->variationTypes->mapWithKeys(function($item){
+        //     return [$item->id => $item->options[0]?->id];
+        // })->toArray());
+        return $this->variationTypes->mapWithKeys(function($item){
+            return [$item->id => $item->options[0]?->id];
+        })->toArray();
     }
 }

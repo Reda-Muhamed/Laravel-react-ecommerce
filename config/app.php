@@ -123,8 +123,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
     'currency'=>env('App_CURRENCY','USD'),
-    'stripe_secret_key'=> env('STRIPE_SECRET_KEY'),
-    'stripe_webhook_secret_key'=> env('STRIPE_WEBHOOK_SECRET_KEY'),
+    'stripe_secret'=> env('STRIPE_SECRET'),
+    'stripe_webhook_secret'=> env('STRIPE_WEBHOOK_SECRET'),
+    'stripe_key'=> env('STRIPE_KEY'),
     'platform_fee_pct'=>10
 
 ];
