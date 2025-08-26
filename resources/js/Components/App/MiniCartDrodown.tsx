@@ -3,7 +3,6 @@
 import { Link, usePage } from "@inertiajs/react";
 import CurrencyFormatter from "../Core/CurrencyFormatter";
 import { productRoute } from "@/helper";
-import CartItem from "./CartItem";
 
 export default function MiniCartDropdown() {
   const { totalQuantity, totalPrice,miniCartItems  } = usePage().props;
@@ -23,7 +22,7 @@ export default function MiniCartDropdown() {
         </div>
       </div>
 
-      <div tabIndex={0} className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-[480px] shadow">
+      <div tabIndex={0} className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-[350px] md:w-[400px] lg:w-[480px] shadow">
         <div className="card-body">
           <span className="text-lg font-bold">{totalQuantity} Items</span>
           <div className="my-4 max-h-[300px] overflow-auto">

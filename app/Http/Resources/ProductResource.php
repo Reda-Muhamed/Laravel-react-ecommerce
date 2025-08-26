@@ -9,6 +9,13 @@ class ProductResource extends JsonResource
     public static $wrap = false; // ✅ Keep Inertia clean (no data wrapper)
     public function toArray(Request $request): array
     {
+        $option= $request->input("options", []);
+        if($option){
+            $images = $this->getImagesForOptions($option);
+        }else{
+            $images = $this->getImages();
+        }
+
             // dd($this->user->vendor->store_name);
 
         return [
@@ -25,7 +32,7 @@ class ProductResource extends JsonResource
             'image' => $this->getFirstMediaUrl('images'),
 
             // ✅ All images
-            'images' => $this->getMedia('images')->map(fn($image) => [
+            'images' => $images->map(fn($image) => [
                 'id' => $image->id,
                 'thumb' => $image->getUrl('thumb'),
                 'small' => $image->getUrl('small'),

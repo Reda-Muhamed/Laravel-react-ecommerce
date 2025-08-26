@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Auth;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-
+use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
@@ -156,5 +156,30 @@ class Product extends Model implements HasMedia
         return $this->variationTypes->mapWithKeys(function($item){
             return [$item->id => $item->options[0]?->id];
         })->toArray();
+    }
+    public function getImages():MediaCollection{
+        if ($this->options()->count() > 0) {
+            foreach ($this->options as $option) {
+                $images = $option->getMedia('images');
+                if ($images->count() > 0) {
+                    return $images;
+                }
+            }
+        }
+        return $this->getMedia('images');
+    }
+    public function getImagesForOptions($optionIds = []):MediaCollection{
+        if ($optionIds) {
+            $optionIds = array_values($optionIds);
+            sort($optionIds);
+            $options = VariationTypeOption::whereIn('id', $optionIds)->get();
+            foreach ($options as $option) {
+                $images = $option->getMedia('images');
+                if ($images->count() > 0) {
+                    return $images;
+                }
+            }
+        }
+        return $this->getMedia('images');
     }
 }

@@ -62,7 +62,7 @@ console.log(props.success);
         )
       }
 
-      <main>{children}</main>
+      <main className='max-w-full bg-gradient-to-r  from-gray-950 to-gray-900 '>{children}</main>
     </div>
   );
 }

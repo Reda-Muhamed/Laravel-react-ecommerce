@@ -26,6 +26,8 @@ export default function Show({ product, variationsOptions }: { product: Product,
   })
   const { url} = usePage();
   const appName = usePage().props.appName || 'Ecommerce';
+  // console.log(appName);
+
   /*
      selectedOptions (useState):
      Keeps track of the user's currently selected variation options locally in the UI.
@@ -237,9 +239,9 @@ export default function Show({ product, variationsOptions }: { product: Product,
         <meta property="og:description" content={product.meta_description || product.description.substring(0, 160)} />
         <meta property="og:image" content={product.image} />
         <meta property="og-site_name" content={appName} />
-        
+
       </Head>
-      <div className="container mx-auto p-8 bg-gradient-to-r  from-gray-950 to-gray-900">
+      <div className="container w-full mx-auto p-8 bg-gradient-to-r  from-gray-950 to-gray-900">
         <div className="grid gap-8 grid-cols-1 lg:grid-cols-12">
           <div className="col-span-7 ">
             <Carousel images={images} />
