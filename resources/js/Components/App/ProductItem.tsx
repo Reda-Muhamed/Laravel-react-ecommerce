@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Product } from '@/types';
+import { Product, Vendor } from '@/types';
 import { Link, useForm } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import CurrencyFormatter from '../Core/CurrencyFormatter';
 
-export default function ProductItem({ product }: { product: Product }) {
+export default function ProductItem({ product , vendor }: { product: Product ,vendor?:Vendor}) {
   const form = useForm<{
     option_ids: Record<string, number>;
     quantity: number;
@@ -22,6 +22,8 @@ export default function ProductItem({ product }: { product: Product }) {
       }
     })
   }
+  // console.log('product',product.store_name);
+  // console.log('product',product);
   return (
     <motion.div
       className="bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl border border-gray-700"
@@ -48,12 +50,12 @@ export default function ProductItem({ product }: { product: Product }) {
         <h2 className="text-lg font-semibold text-white line-clamp-2">{product.name}</h2>
         <p className="text-sm text-gray-400 mt-1">
           by{' '}
-          <Link href="/" className="hover:underline text-gray-300">
-            {product.user.name}
+          <Link href={route('vendor.profile',product?.user?.store_name || vendor?.store_name )} className="hover:underline text-gray-300">
+            {product?.user?.name}
           </Link>{' '}
           in{' '}
           <Link href="/" className="hover:underline text-gray-300">
-            {product.department.name}
+            {product?.department?.name}
           </Link>
         </p>
 

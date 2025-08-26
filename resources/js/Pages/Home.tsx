@@ -27,9 +27,6 @@ export default function Home({ products }: PageProps<{
       :grid-cols-3 xl:grid-cols-4 p-8">
         {products?.data?.map((product) => (
           <ProductItem  key={product.id} product={product} />
-
-
-
         ))}
       </div>
     </AuthenticatedLayout>

@@ -7,9 +7,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class ProductResource extends JsonResource
 {
     public static $wrap = false; // ✅ Keep Inertia clean (no data wrapper)
-
     public function toArray(Request $request): array
     {
+            // dd($this->user->vendor->store_name);
+
         return [
             'id' => $this->id,
             'name' => $this->name, // ✅ Use correct DB column
@@ -33,6 +34,7 @@ class ProductResource extends JsonResource
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
+                'store_name' => $this->user->vendor->store_name ?? null,
             ],
 
             // ✅ Department details

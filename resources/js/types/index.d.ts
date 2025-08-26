@@ -32,6 +32,7 @@ export type Product = {
   user: {
     id: number;
     name: string;
+    store_name:string;
   };
   department: {
     id: number;
@@ -62,7 +63,11 @@ export type VariationType = {
 export type PaginationProps<T> = {
   data: Array<T>;
 };
-
+export type Vendor ={
+  id:number;
+  store_name:string;
+  store_address:string;
+}
 export type Image = {
   id: number;
   thumb: string;
