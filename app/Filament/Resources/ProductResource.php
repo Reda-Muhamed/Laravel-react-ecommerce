@@ -13,6 +13,7 @@ use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -76,6 +77,10 @@ class ProductResource extends Resource
                 TextInput::make('price')->required()->numeric(),
                 TextInput::make('quantity')->integer()->integer(),
                 Select::make('status')->options(ProductStatusEnum::labels())->default(ProductStatusEnum::Draft->value)->required(),
+                Section::make("SEO")->collapsible()->schema([
+                    TextInput::make('meta_title')->maxLength(255),
+                    TextInput::make('meta_description'),
+                ])
             ]);
     }
 
@@ -146,9 +151,9 @@ class ProductResource extends Resource
             'index' => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
-            'images'=> Pages\ProductImages::route('/{record}/images'),
-            'variation-types'=> Pages\ProductVariationTypes::route('/{record}/variation-types'),
-            'variation'=> Pages\ProductVariations::route('/{record}/variation'),
+            'images' => Pages\ProductImages::route('/{record}/images'),
+            'variation-types' => Pages\ProductVariationTypes::route('/{record}/variation-types'),
+            'variation' => Pages\ProductVariations::route('/{record}/variation'),
         ];
     }
     // this func related to the media like images

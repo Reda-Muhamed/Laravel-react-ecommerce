@@ -18,7 +18,8 @@ class Vendor extends Model
     {
         return $query->where('status', VendorStatusEnum::Approved->value)
             ->whereHas('user', function ($q) {
-                $q->whereNotNull('stripe_id');
+                $q->whereNotNull
+                ('stripe_id');
             });
     }
 

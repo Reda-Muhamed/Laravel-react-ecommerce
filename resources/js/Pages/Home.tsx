@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import DepartmentsSection from '@/Components/Core/DepartmentsSection';
 import ProductItem from '@/Components/App/ProductItem';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps, PaginationProps, Product } from '@/types';
@@ -23,8 +24,9 @@ export default function Home({ products }: PageProps<{
           </div>
         </div>
       </div>
+      <DepartmentsSection/>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg
-      :grid-cols-3 xl:grid-cols-4 p-8">
+      :grid-cols-3 xl:grid-cols-4 p-8 bg-[#030712]">
         {products?.data?.map((product) => (
           <ProductItem  key={product.id} product={product} />
         ))}

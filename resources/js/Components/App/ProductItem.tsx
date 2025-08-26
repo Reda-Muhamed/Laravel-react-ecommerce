@@ -54,7 +54,7 @@ export default function ProductItem({ product , vendor }: { product: Product ,ve
             {product?.user?.name}
           </Link>{' '}
           in{' '}
-          <Link href="/" className="hover:underline text-gray-300">
+          <Link href={route('products.byDepartment' , product.department.slug)} className="hover:underline text-gray-300">
             {product?.department?.name}
           </Link>
         </p>

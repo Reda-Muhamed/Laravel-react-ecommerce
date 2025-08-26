@@ -32,6 +32,7 @@ class ProductListResource extends JsonResource
             'department' => [
                 'id' => $this->department->id ?? null,
                 'name' => $this->department->name ?? null,
+                'slug' => $this->department->slug ?? null,
             ],
         ];
     }

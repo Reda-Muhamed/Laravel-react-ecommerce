@@ -25,6 +25,8 @@ export type Product = {
   price: number;
   description: string;
   quantity: number;
+  meta_title: string;
+  meta_description: string;
   image: string;
   images: Image[];
   description: string;
@@ -37,6 +39,7 @@ export type Product = {
   department: {
     id: number;
     name: string;
+    slug: string;
   };
   variationTypes: VariationType[];
   variations: Array<{
@@ -46,6 +49,7 @@ export type Product = {
     price: number;
   }>;
 };
+
 export type VariationTypeOption = {
   id: number;
   name: string;
@@ -59,7 +63,18 @@ export type VariationType = {
   type: 'Select' | 'Radio' | 'Image';
   options: VariationTypeOption[];
 };
-
+export type Department ={
+  id:number;
+  name:string;
+  slug:string;
+  meta_title:string;
+  meta_description:string;
+  categories:Category[];
+}
+export type Category ={
+  id:number;
+  name:string;
+}
 export type PaginationProps<T> = {
   data: Array<T>;
 };
@@ -125,6 +140,7 @@ export type Order = {
 export type PageProps<
   T extends Record<string, unknown> = Record<string, unknown>,
 > = T & {
+  appName: string;
   csrf_token?: string;
   error?: string;
   success: {
@@ -139,4 +155,6 @@ export type PageProps<
   totalQuantity: number;
   totalPrice: number;
   miniCartItems: CartItem[];
+  departments: Department[];
+  keyword:string;
 };

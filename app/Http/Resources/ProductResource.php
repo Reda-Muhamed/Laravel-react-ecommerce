@@ -18,6 +18,8 @@ class ProductResource extends JsonResource
             'price' => $this->price,
             'description' => $this->description,
             'quantity' => $this->quantity,
+            'meta_title' => $this->meta_title,
+            'meta_description' => $this->meta_description,
 
             // ✅ Main image
             'image' => $this->getFirstMediaUrl('images'),
@@ -41,6 +43,7 @@ class ProductResource extends JsonResource
             'department' => [
                 'id' => $this->department->id,
                 'name' => $this->department->name,
+                'slug' => $this->department->slug,
             ],
 
             // ✅ Variation Types (with options + images)
