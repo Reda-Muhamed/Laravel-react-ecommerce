@@ -10,10 +10,12 @@ use App\Models\User;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,6 +38,12 @@ class DepartmentResource extends Resource
                     $set('slug', Str::slug($state));
                 }),
                 TextInput::make('slug')->required(),
+                SpatieMediaLibraryFileUpload::make('Department Image')
+                ->collection('department_image') // must match the collection name above
+                ->label('Department Image')
+                ->image() // for image validation
+                ->maxFiles(1),
+
                 Checkbox::make('active'),
             ]);
     }
@@ -46,6 +54,7 @@ class DepartmentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')->sortable()->searchable(),
+                 SpatieMediaLibraryImageColumn::make('image')->collection('department_image')->limit(1)->conversion('thumb')->label('image'),
             ])->defaultSort('created_at', 'desc')
             ->filters([
                 //

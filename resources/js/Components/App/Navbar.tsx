@@ -1,30 +1,40 @@
 /* eslint-disable prettier/prettier */
 // eslint-disable-next-line prettier/prettier
-import { Link, useForm, usePage } from '@inertiajs/react';
-import React from 'react'
+import { Link, router, useForm, usePage } from '@inertiajs/react';
+import React, { useState } from 'react'
 import MiniCartDrodown from './MiniCartDrodown';
-import { PageProps } from '@/types';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 function Navbar() {
-  const { auth, keyword } = usePage().props;
-  const { url } = usePage();
+  const { auth ,url} = usePage().props;
   // console.log('url',url.split('/')[2])
   // console.log('departments',departments)
   const { user } = auth;
-  const searchForm = useForm<{
-    keyword: string,
-  }>({
-    keyword: keyword || '',
-  })
+  const [searchForm, setSearchForm] = useState("");
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    searchForm.get(url, {
+
+
+    // Get existing query parameters
+    const params = new URLSearchParams(window.location.search);
+     if (searchForm.trim() === '') {
+      params.delete('products_index[query]');
+
+    }
+        // Add or update the query parameter
+
+    else {
+      params.set('products_index[query]', searchForm);
+    }
+
+    // Keep existing params and add the new one
+    router.get(`${window.location.pathname}?${params.toString()}`, {}, {
       preserveState: true,
       preserveScroll: true,
+      replace: true,
     });
+  };
 
-  }
   return (
 
     <div className="navbar max-w-full bg-base-100 shadow-sm bg-gradient-to-r from-gray-950 to-gray-900">
@@ -38,8 +48,8 @@ function Navbar() {
             <input
               type="text"
               name="search"
-              value={searchForm.data.keyword}
-              onChange={(e) => searchForm.setData('keyword', e.target.value)}
+              value={searchForm}
+              onChange={(e) => setSearchForm(e.target.value)}
               placeholder="Search..."
               className="input input-bordered join-item flex-1  focus:outline-none focus:ring-1 outline-none border-spacing-1 bg-gradient-to-r from-gray-950 to-gray-900"
             />

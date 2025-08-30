@@ -2,13 +2,17 @@
 
 namespace App\Filament\Resources\DepartmentResource\RelationManagers;
 
+use App\Filament\Resources\ProductResource\Pages\CategoryImage;
 use App\Models\Category;
 use App\Models\Department;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
+use Filament\Pages\Page;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,32 +22,38 @@ class CategoriesRelationManager extends RelationManager
     protected static string $relationship = 'Categories';
 
     public function form(Form $form): Form
-{
-    $department = $this->getOwnerRecord();
+    {
+        $department = $this->getOwnerRecord();
 
-    return $form
-        ->schema([
-            Forms\Components\TextInput::make('name')
-                ->required()
-                ->maxLength(255),
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
 
-            Forms\Components\Select::make('parent_id')
-                ->options(function () use ($department) {
-                    if (!$department) {
-                        return [];
-                    }
-                    return Category::query()
-                        ->where('department_id', $department->id)
-                        ->pluck('name', 'id')
-                        ->toArray();
-                })
-                ->label('Parent Category')
-                ->preload()
-                ->searchable(),
+                Forms\Components\Select::make('parent_id')
+                    ->options(function () use ($department) {
+                        if (!$department) {
+                            return [];
+                        }
+                        return Category::query()
+                            ->where('department_id', $department->id)
+                            ->pluck('name', 'id')
+                            ->toArray();
+                    })
+                    ->label('Parent Category')
+                    ->preload()
+                    ->searchable(),
+                SpatieMediaLibraryFileUpload::make('image')
+                    ->collection('image') // must match the collection name above
+                    ->label('Category Image')
+                    ->image() // for image validation
+                    ->maxFiles(1),
 
-            Forms\Components\Checkbox::make('active')
-        ]);
-}
+
+                Forms\Components\Checkbox::make('active')
+            ]);
+    }
 
 
     public function table(Table $table): Table
@@ -51,6 +61,11 @@ class CategoriesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
+                SpatieMediaLibraryImageColumn::make('image')->collection('image')->limit(1)->conversion('thumb')->label('image'),
+                Tables\Columns\TextColumn::make('name')
+                    ->words(10)
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
                 Tables\Columns\TextColumn::make('parent.name')->sortable()->searchable(),
                 IconColumn::make('active')->boolean(),

@@ -40,7 +40,7 @@ class CartController extends Controller
 
         ]);
         $cartService->addItemToCart($product, $data['quantity'], $data['option_ids'] ?: []);
-       
+
             return back()->with('success', 'Product added to cart successfully!');
     }
 
@@ -74,7 +74,7 @@ class CartController extends Controller
 
     public function checkout(Request $request, CartServices $cartService)
     {
-        Stripe::setApiKey(config('app.stripe_secret_key'));
+        Stripe::setApiKey(config('app.stripe_secret'));
         $vendorId = $request->input('vendor_id');
         $allCartItems = $cartService->getCartItemsGrouped();
         DB::beginTransaction();

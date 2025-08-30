@@ -65,8 +65,8 @@ class HandleInertiaRequests extends Middleware
             'miniCartItems'=>$cartItems,
             'totalQuantity'=> $toatalQuantity,
             'totalPrice'=> $totalPrice,
-            'departments'=> DepartmentResource::collection($departments)->collection->toArray(), // to use a resource collection in middleware
-            'keyword'=> $request->query('keyword',''), // to use a resource collection in middleware
+            'sharedDepartments'=> DepartmentResource::collection($departments)->collection->toArray(), // to use a resource collection in middleware
+            'keyword'=> $request->input('products_index', [])['query'] ?? '', // to use a resource collection in middleware
         ];
     }
 }

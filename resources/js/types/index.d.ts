@@ -63,10 +63,29 @@ export type VariationType = {
   type: 'Select' | 'Radio' | 'Image';
   options: VariationTypeOption[];
 };
+export type FilterProps  = {
+  keyword: string | null;
+  department_names: string[];
+  category_names: string[];
+  price_min: string | null;
+  price_max: string | null;
+}
+
+export interface IndexProps extends PageProps {
+  products: PaginationProps<Product>;
+  department: Department;
+  departments: Department[];
+  categories: Category[];
+  showDepartments: boolean;
+  showCategories: boolean;
+  filters: FilterProps;
+}
+
 export type Department ={
   id:number;
   name:string;
   slug:string;
+  image:string;
   meta_title:string;
   meta_description:string;
   categories:Category[];
@@ -74,6 +93,7 @@ export type Department ={
 export type Category ={
   id:number;
   name:string;
+  image:string;
 }
 export type PaginationProps<T> = {
   data: Array<T>;
@@ -155,6 +175,6 @@ export type PageProps<
   totalQuantity: number;
   totalPrice: number;
   miniCartItems: CartItem[];
-  departments: Department[];
+  SharedDepartments: Department[];
   keyword:string;
 };

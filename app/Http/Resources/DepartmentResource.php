@@ -19,11 +19,14 @@ class DepartmentResource extends JsonResource
             "id"=> $this->id,
             "name"=> $this->name,
             "slug"=> $this->slug,
+            'image' => $this->getFirstMediaUrl('department_image', 'large') ?: null,
             'meta_title' => $this->meta_title,
             'meta_description' => $this->meta_description,
             'categries'=>$this->categories->map(fn($category)=>[
                 'id'=>$category->id,
                 'name'=>$category->name,
+                'image' => $category->getFirstMediaUrl('image', 'large') ?: null,
+
             ]),
         ];
     }

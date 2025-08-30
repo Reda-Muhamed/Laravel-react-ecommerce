@@ -1,20 +1,12 @@
 /* eslint-disable prettier/prettier */
-import ApplicationLogo from '@/Components/App/ApplicationLogo';
 import Navbar from '@/Components/App/Navbar';
-import Dropdown from '@/Components/Core/Dropdown';
-import NavLink from '@/Components/Core/NavLink';
-import ResponsiveNavLink from '@/Components/Core/ResponsiveNavLink';
-import { Link, usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
 
 export default function AuthenticatedLayout({
-  header,
   children,
 }: PropsWithChildren<{ header?: ReactNode }>) {
   const props = usePage().props;
-  const user = props.auth.user;
-  const [showingNavigationDropdown, setShowingNavigationDropdown] =
-    useState(false);
 
 console.log(props.success);
 
@@ -62,7 +54,7 @@ console.log(props.success);
         )
       }
 
-      <main className='max-w-full bg-gradient-to-r  from-gray-950 to-gray-900 '>{children}</main>
+      <main className='max-w-full min-h-[calc(100vh-65px)] bg-gradient-to-r from-gray-950 to-gray-900 '>{children}</main>
     </div>
   );
 }

@@ -4,20 +4,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-type Department = {
-  id: number;
-  name: string;
-  slug: string;
-  image_url?: string;
-};
 
 function DepartmentsSection() {
-  const { departments } = usePage().props as { departments: Department[] };
+  const { sharedDepartments } = usePage().props ;
+  console.log(sharedDepartments);
+
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [autoScroll, setAutoScroll] = useState(true);
 
   // Duplicate departments for infinite scroll effect
-  const extendedDepartments = [...departments, ...departments];
+  const extendedDepartments = [...sharedDepartments];
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -77,6 +73,7 @@ function DepartmentsSection() {
       scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
     }
   };
+  // console.log(departments);
 
   return (
     <section className="bg-gradient-to-b from-gray-900 to-gray-950 py-16 px-6 text-white relative">
@@ -120,18 +117,18 @@ function DepartmentsSection() {
                   key={`${dep.id}-${index}`}
                   whileHover={{ scale: 1.08 }}
                   transition={{ type: "spring", stiffness: 200 }}
-                  className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl shadow-md hover:shadow-2xl cursor-pointer border border-gray-700 group w-48 flex-shrink-0"
+                  className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl shadow-md hover:shadow-2xl cursor-pointer border border-gray-700 group w-48 h-60 flex-shrink-0"
                 >
                   <Link
                     href={route("products.byDepartment", dep.slug)}
-                    className="flex flex-col items-center text-center p-6"
+                    className="flex flex-col items-center text-center  pt-3 px-0 "
                   >
                     {/* Department Image */}
-                    <div className="h-24 w-24 mb-4 rounded-full overflow-hidden bg-gray-100 shadow-md">
+                    <div className="h-44 w-44 mb-4 rounded-2xl overflow-hidden bg-gray-100 shadow-md">
                       <img
-                        src={dep?.image_url || "https://via.placeholder.com/150"}
+                        src={dep?.image || "https://via.placeholder.com/150"}
                         alt={dep.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                        className="w-full object-cover h-40  group-hover:scale-110 transition-transform"
                       />
                     </div>
 

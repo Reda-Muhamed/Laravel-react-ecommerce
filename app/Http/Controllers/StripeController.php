@@ -41,8 +41,8 @@ class StripeController extends Controller
         Log::info("=====================================================");
         Log::info("=====================================================");
 
-        $stripe = new \Stripe\StripeClient(config('stripe_secret'));
-        $endpoint_secret = config('stripe_webhook_secret');
+        $stripe = new \Stripe\StripeClient(config('app.stripe_secret'));
+        $endpoint_secret = config('app.stripe_webhook_secret');
 
         $payload = $request->getContent();
         $sig_header = $request->headers->get("Stripe-Signature");
@@ -68,9 +68,14 @@ class StripeController extends Controller
         switch ($event->type) {
             case "charge.updated":
                 $charge = $event->data->object;
-                $transactionId = $charge["balance_transaction"];
-                $paymentIntent = $charge["payment_intent"];
-                $balanceTransaction = $stripe->balanceTransactions->retrieve($transactionId);
+                $transactionId = $charge['balance_transaction'] ?? null;
+                $paymentIntent = $charge["payment_intent"] ?? null;
+                if ($transactionId && $transactionId) {
+                    $balanceTransaction = $stripe->balanceTransactions->retrieve($transactionId);
+                } else {
+                    Log::warning("Charge updated event without balance transaction ID: " . $charge['id']);
+                    return response()->json(['status' => 'pending'], 200);
+                }
                 $orders = Order::where('payment_intent', $paymentIntent)->get();
                 $totalAmount = $balanceTransaction['amount'];
                 $stripeFee = 0;
@@ -126,6 +131,8 @@ class StripeController extends Controller
             default:
                 echo 'Recieved unknown event type ' . $event->type;
         }
+         Log::info("============DONE SUCCESSFFULLLY=======================");
+
         return response('', 200);
     }
     public function connect()
