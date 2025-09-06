@@ -3,17 +3,18 @@ import { Link, usePage } from '@inertiajs/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Department, PageProps } from '@/types';
 
 
 function DepartmentsSection() {
-  const { sharedDepartments } = usePage().props ;
-  console.log(sharedDepartments);
+  const { sharedDepartments } = usePage<PageProps>().props ;
+  const sharedDepartments1: Department[] = sharedDepartments as Department[];
+  // console.log(sharedDepartments);
 
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [autoScroll, setAutoScroll] = useState(true);
 
   // Duplicate departments for infinite scroll effect
-  const extendedDepartments = [...sharedDepartments];
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -112,7 +113,7 @@ function DepartmentsSection() {
             style={{ scrollBehavior: "smooth" }}
           >
             <div className="grid grid-rows-2 grid-flow-col gap-6 auto-cols-max px-12">
-              {extendedDepartments.map((dep, index) => (
+              {sharedDepartments1.map((dep:Department, index:number) => (
                 <motion.div
                   key={`${dep.id}-${index}`}
                   whileHover={{ scale: 1.08 }}

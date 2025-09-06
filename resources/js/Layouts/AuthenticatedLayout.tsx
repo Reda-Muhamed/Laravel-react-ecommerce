@@ -8,7 +8,7 @@ export default function AuthenticatedLayout({
 }: PropsWithChildren<{ header?: ReactNode }>) {
   const props = usePage().props;
 
-console.log(props.success);
+// console.log(props.success);
 
   const [successMessage, setSuccessMessage] = useState<any[]>([]);
   const timeoutRef = useRef<{ [key: number]: ReturnType<typeof setTimeout> }>({});

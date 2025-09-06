@@ -33,8 +33,6 @@ export default function Login({
     <AuthenticatedLayout>
 
       <Head title="Log in" />
-
-
       <div className="p-10 h-screan">
         <div className="card bg-gray-950 shadow max-w-[420px] mx-auto">
 

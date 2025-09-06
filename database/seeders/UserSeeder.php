@@ -27,9 +27,8 @@ class UserSeeder extends Seeder
 
         ]);
         $user->assignRole(RolesEnum::Vendor);
-        Vendor::factor()->create([
+        Vendor::factory()->create([
             'user_id'=>$user->id,
-            'name'=> 'vendor',
             'status'=>VendorStatusEnum::Active,
             'store_name'=>'Vendor Store',
             'store_address'=> fake()->address(),
