@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import Footer from '@/Components/App/Footer';
 import Navbar from '@/Components/App/Navbar';
 import { usePage } from '@inertiajs/react';
 import { PropsWithChildren, ReactNode, useEffect, useRef, useState } from 'react';
@@ -55,6 +56,7 @@ export default function AuthenticatedLayout({
       }
 
       <main className='max-w-full min-h-[calc(100vh-65px)] bg-gradient-to-r from-gray-950 to-gray-900 '>{children}</main>
+      <Footer/>
     </div>
   );
 }

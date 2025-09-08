@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Services\CartServices;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schedule;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
@@ -25,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (app()->environment('local')) {
+            Mail::alwaysTo('reda2542006@gmail.com');
+        }
         // we are gonna define schedule here for the payout command to vendors
         Schedule::command('payout:vendors')->monthlyOn(1, '00:00')->withoutOverlapping();
         Vite::prefetch(concurrency: 3);

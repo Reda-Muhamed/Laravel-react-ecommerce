@@ -37,40 +37,67 @@ export default function FilterSidebar({
   // console.log("=================================");
 
 
-  const [selectedDepartments, setSelectedDepartments] = useState<string[]>(filters.department_names || []);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(filters.category_names || []);
+  const [selectedDepartments, setSelectedDepartments] = useState<string[]>(
+    Array.isArray(filters.department_names) ? filters.department_names : []
+  );
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    Array.isArray(filters.category_names) ? filters.category_names : []
+  );
+
   const [priceMin, setPriceMin] = useState<string>(filters.price_min || '');
   const [priceMax, setPriceMax] = useState<string>(filters.price_max || '');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-const { url } = usePage();
-const currentDepartment = url?.split('/')[2]?.split('?')[0];
+  const { url } = usePage();
+  const currentDepartment = url?.split('/')[2]?.split('?')[0];
   // Update URL with all filters
   const updateUrl = () => {
     setIsLoading(true);
-    const params = new URLSearchParams();
+
+    // Get current search params from URL
+    const params = new URLSearchParams(window.location.search);
+
+    // Reset product filters but keep page if it exists
+    params.delete("products_index[query]");
+    params.delete("products_index[refinementList][department_name][0]");
+    params.delete("products_index[refinementList][category_name][0]");
+    params.delete("products_index[numericMenu][price][min]");
+    params.delete("products_index[numericMenu][price][max]");
+
     if (filters.keyword) {
-      params.set('products_index[query]', filters.keyword);
-    }
-    selectedDepartments.forEach((name, index) => {
-      params.append(`products_index[refinementList][department_name][${index}]`, name);
-    });
-    selectedCategories.forEach((name, index) => {
-      params.append(`products_index[refinementList][category_name][${index}]`, name);
-    });
-    if (priceMin && !isNaN(Number(priceMin))) {
-      params.set('products_index[numericMenu][price][min]', priceMin);
-    }
-    if (priceMax && !isNaN(Number(priceMax))) {
-      params.set('products_index[numericMenu][price][max]', priceMax);
+      params.set("products_index[query]", filters.keyword);
     }
 
+    selectedDepartments.forEach((name, index) => {
+      params.append(
+        `products_index[refinementList][department_name][${index}]`,
+        name
+      );
+    });
+
+    selectedCategories.forEach((name, index) => {
+      params.append(
+        `products_index[refinementList][category_name][${index}]`,
+        name
+      );
+    });
+
+    if (priceMin && !isNaN(Number(priceMin))) {
+      params.set("products_index[numericMenu][price][min]", priceMin);
+    }
+    if (priceMax && !isNaN(Number(priceMax))) {
+      params.set("products_index[numericMenu][price][max]", priceMax);
+    }
+
+    // ⚡ Do NOT reset "page" here — let it stay in params if user clicked pagination
     router.get(`${window.location.pathname}?${params.toString()}`, {}, {
       preserveState: true,
       preserveScroll: true,
       replace: true,
-      onFinish: () => setIsLoading(false)
+      onFinish: () => setIsLoading(false),
     });
   };
+
 
   // Update URL when filters change
   useEffect(() => {
@@ -81,11 +108,11 @@ const currentDepartment = url?.split('/')[2]?.split('?')[0];
   const toggleSelection = (name: string, type: 'department' | 'category') => {
     if (type === 'department') {
       setSelectedDepartments((prev) =>
-        prev.includes(name) ? prev.filter((d) => d !== name) : [...prev, name]
+        prev?.includes(name) ? prev.filter((d) => d !== name) : [...prev, name]
       );
     } else {
       setSelectedCategories((prev) =>
-        prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]
+        prev?.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]
       );
     }
   };
@@ -136,7 +163,7 @@ const currentDepartment = url?.split('/')[2]?.split('?')[0];
               >
                 Reset Filters
               </SecondaryButton>
-            ) }
+            )}
           </div>
           {selectedDepartments.length === 0 && selectedCategories.length === 0 && !priceMin && !priceMax && (
             <p className="text-[#c1c1c1]">No filters applied.</p>
@@ -148,7 +175,7 @@ const currentDepartment = url?.split('/')[2]?.split('?')[0];
                 {selectedDepartments.map((dep) => (
                   <div key={dep} className="bg-blue-600 text-[#c1c1c1] px-2 py-1 rounded-full text-sm ">
                     {dep}
-                    {currentDepartment?.toLowerCase() != dep?.toLowerCase() &&<span
+                    {currentDepartment?.toLowerCase() != dep?.toLowerCase() && <span
                       className="ml-1 cursor-pointer"
                       onClick={() => toggleSelection(dep, 'department')}
                     > &times; </span>}
@@ -193,7 +220,7 @@ const currentDepartment = url?.split('/')[2]?.split('?')[0];
             {departments.map((dep) => (
               <label key={dep.id} className="block mb-2">
                 <Checkbox
-                  checked={selectedDepartments.includes(dep.name)}
+                  checked={selectedDepartments?.includes(dep.name)}
                   onChange={() => toggleSelection(dep.name, 'department')}
                   className="mr-2 w-4 h-4 rounded-md"
                   aria-label={`Filter by ${dep.name}`}

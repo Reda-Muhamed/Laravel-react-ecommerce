@@ -26,7 +26,7 @@ export default function ProductItem({ product , vendor }: { product: Product ,ve
   // console.log('product',product);
   return (
     <motion.div
-      className="bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl border border-gray-700"
+      className="bg-gradient-to-br from-gray-950  to-gray-900 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl border border-gray-700"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}

@@ -16,12 +16,12 @@ export default function Index({
   categories,
   filters,
 }: IndexProps) {
-  // console.log("=================================")
+  console.log("=================================")
   // console.log('department', department)
   // console.log('categories', categories)
-  // console.log('products', products)
+  console.log('products', products)
   // console.log('filters', filters)
-  // console.log('departments', departments)
+  console.log('departments', departments)
 
   return (
 

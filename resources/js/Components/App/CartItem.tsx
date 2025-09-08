@@ -2,7 +2,6 @@
 import { productRoute } from '@/helper';
 import { CartItem as CartItemType } from '@/types'
 import { Link, router, useForm } from '@inertiajs/react';
-import { error } from 'console';
 import TextInput from '../Core/TextInput';
 import React, { useState } from 'react';
 import CurrencyFormatter from '../Core/CurrencyFormatter';
@@ -29,7 +28,7 @@ export default function CartItem({ item }: CartItemProps) {
       quantity:ev.target.value,
       option_ids:item.option_ids
     },{
-      
+
       preserveScroll:true,
       onError:(errors)=>{
         setError(Object.values(errors)[0])
@@ -39,7 +38,7 @@ export default function CartItem({ item }: CartItemProps) {
   }
   return (
     <>
-      <div key={item.id} className='flex gap-6 p-3'>
+      <div key={item.id} className='flex gap-6 p-3 bg-gradient-to-br from-gray-900 to-gray-950'>
         <Link href={productRoute(item)}
           className='w-32 min-w-32 min-h-32 flex justify-center self-start'>
           <img src={item.image} alt='' className='max-w-full max-h-full' />

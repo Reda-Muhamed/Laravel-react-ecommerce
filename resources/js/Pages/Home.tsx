@@ -6,33 +6,24 @@ import { IndexProps } from '@/types';
 import { Head } from '@inertiajs/react';
 import FilterSidebar from '@/Components/Core/FilterSidebar';
 import { motion } from 'framer-motion';
+import HeroSection from '@/Components/App/HeroSection';
+import Pagination from '@/Components/Core/Pagination';
 
 export default function Home({ products,
   departments,
   categories,
   filters,
 }: IndexProps) {
-  console.log("=================================");
-  console.log('filters', filters);
-  console.log('departments', departments);
-  console.log('categories', categories);
-  console.log('products', products);
-  console.log("=================================");
+  // console.log("=================================");
+  // console.log('filters', filters);
+  // console.log('departments', departments);
+  // console.log('categories', categories);
+  console.log('productssssssss', products);
+  // console.log("=================================");
   return (
     <AuthenticatedLayout>
       <Head title="Home" />
-      <div className=" hero bg-gray-700 bg-base-200 h-[500px]">
-        <div className="hero-content text-center">
-          <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
-            <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-              quasi. In deleniti eaque aut repudiandae et a id nisi.
-            </p>
-            <button className="btn btn-primary">Get Started</button>
-          </div>
-        </div>
-      </div>
+      <HeroSection />
 
       <DepartmentsSection />
 
@@ -66,6 +57,12 @@ export default function Home({ products,
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
+          <Pagination meta={products.meta} data={[]} links={{
+            first: null,
+            last: null,
+            prev: null,
+            next: null
+          }}/>
         </div>
       </div>
 

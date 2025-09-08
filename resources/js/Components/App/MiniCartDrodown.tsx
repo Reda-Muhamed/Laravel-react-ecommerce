@@ -12,7 +12,7 @@ export default function MiniCartDropdown() {
   // console.log(' items ',items)
 
   return (
-    <div className="dropdown dropdown-end">
+    <div className="dropdown dropdown-end ">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
         <div className="indicator">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -22,7 +22,7 @@ export default function MiniCartDropdown() {
         </div>
       </div>
 
-      <div tabIndex={0} className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-[350px] md:w-[400px] lg:w-[480px] shadow">
+      <div tabIndex={0} className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-[350px] md:w-[400px] lg:w-[480px] shadow bg-gradient-to-br from-gray-900 via-gray-800 to-gray-950">
         <div className="card-body">
           <span className="text-lg font-bold">{totalQuantity} Items</span>
           <div className="my-4 max-h-[300px] overflow-auto">
