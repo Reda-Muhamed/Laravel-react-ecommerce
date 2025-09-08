@@ -8,6 +8,50 @@ import FilterSidebar from '@/Components/Core/FilterSidebar';
 import { motion } from 'framer-motion';
 import HeroSection from '@/Components/App/HeroSection';
 import Pagination from '@/Components/Core/Pagination';
+import NProgress from "nprogress";
+import { router } from "@inertiajs/react";
+import "nprogress/nprogress.css";
+import "../../css//nprogress-custom.css";
+
+// Start Loader
+router.on("start", () => {
+  if (!document.getElementById("custom-loader")) {
+    const overlay = document.createElement("div");
+    overlay.id = "custom-loader";
+    overlay.style.cssText = `
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    `;
+    overlay.innerHTML = `
+      <div style="
+        width: 60px;
+        height: 60px;
+        border: 6px solid #e5e7eb;
+        border-top-color: #4f46e5;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      "></div>
+      <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+      </style>
+    `;
+    document.body.appendChild(overlay);
+  }
+
+  NProgress.start();
+});
+
+// Stop Loader
+router.on("finish", () => {
+  NProgress.done();
+  const overlay = document.getElementById("custom-loader");
+  if (overlay) overlay.remove();
+});
 
 export default function Home({ products,
   departments,
@@ -57,15 +101,14 @@ export default function Home({ products,
               <ProductItem key={product.id} product={product} />
             ))}
           </div>
-          <Pagination meta={products.meta} data={[]} links={{
+          <Pagination  meta={products.meta} data={[]} links={{
             first: null,
             last: null,
             prev: null,
             next: null
-          }}/>
+          }} />
         </div>
       </div>
-
     </AuthenticatedLayout>
   );
 }

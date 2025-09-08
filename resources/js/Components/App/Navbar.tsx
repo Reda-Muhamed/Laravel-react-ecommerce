@@ -39,7 +39,7 @@ function Navbar() {
 
     <div className="navbar max-w-full bg-base-100 shadow-sm bg-gradient-to-r from-gray-950 to-gray-900">
       <div className="flex-1">
-        <Link href='/' className="btn btn-ghost text-xl lg:text-2xl text-amber-400 mt-2 ">So2 Baladna<span className='hidden md:flex' >🛒</span></Link>
+        <Link href='/' className="btn btn-ghost text-xl lg:text-2xl text-violet-500 mt-2 ">So2 Baladna<span className='hidden md:flex' >🛒</span></Link>
 
       </div>
 

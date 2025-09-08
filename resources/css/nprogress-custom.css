@@ -1,0 +1,10 @@
+/* Hide the default bar */
+#nprogress .bar {
+  display: none !important;
+}
+
+/* Hide the default spinner */
+#nprogress .spinner {
+  display: none !important;
+}
+

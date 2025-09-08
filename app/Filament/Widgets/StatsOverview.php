@@ -18,7 +18,9 @@ class StatsOverview extends ChartWidget
             ->orderBy('date');
 
         if (auth()->user()->hasRole(\App\Enums\RolesEnum::Vendor->value)) {
-            $ordersQuery->where('vendor_id', auth()->user()->vendor->id);
+            // dd(auth()->user()->vendor->user_id);
+
+            $ordersQuery->where('vendor_user_id', auth()->user()->vendor->user_id);
         }
 
         $orders = $ordersQuery->pluck('total', 'date');

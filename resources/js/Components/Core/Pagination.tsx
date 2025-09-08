@@ -6,7 +6,7 @@ export default function Pagination<T>({ meta }: PaginationProps<T>) {
   if (!meta.links || meta.links.length === 0) return null;
 
   return (
-    <div className="flex justify-center mt-8">
+    <div className="flex justify-center mt-8 mb-4">
       <div className="join">
         {meta.links.map((link, index) => {
           const isDisabled = !link.url;
